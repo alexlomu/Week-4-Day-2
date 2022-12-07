@@ -85,38 +85,45 @@ print(employee.groupby(employee.Department).describe())
 #Challenge 3
 
 #Open the Orders.csv dataset. Name your dataset orders
-
+orders = pd.read_csv("Orders.zip", compression = "zip", index_col= "Unnamed: 0")
 #Explore your dataset by looking at the data types and the summary statistics. Comment your results
-
+print(orders.info())
+print(orders.describe())
+#We have different data types: 2 columns have float64, 8 columns have int64 and 4 columns have onject so more than half of the dataset is a number
 #What is the average Purchase Price?
-
+purch_price = orders.Quantity * orders.UnitPrice
+print(purch_price.mean())
 #What were the highest and lowest purchase prices?
-
+print(purch_price.max())
+print(purch_price.min())
 #Select all the customers we have in Spain
-
+print(orders[orders.Country == "Spain"].CustomerID.unique())
 #How many customers do we have in Spain?
-
+print(len(orders[orders.Country == "Spain"].CustomerID.unique()))
 #Select all the customers who have bought more than 50 items ?
-
+cust = orders.groupby(orders.CustomerID).InvoiceNo.count().reset_index()
+print(cust[cust.InvoiceNo > 50].CustomerID)
 #Select orders from Spain that are above 50 items
-
+ord = orders[orders.Country == "Spain"]
+print(ord[ord.Quantity > 50])
 #Select all free orders
-
+print(orders[orders.UnitPrice == 0])
 #Select all orders that are 'lunch bag'
-
+print(orders[orders.Description.str.contains("lunch bag")])
 #Select all orders that are made in 2011 and are 'lunch bag'
-
+print(orders[(orders.Description.str.contains("lunch bag"))&(orders.year == 2011)])
 #Show the frequency distribution of the amount spent in Spain.
-
+sns.histplot(data = ord.amount_spent)
 #Select all orders made in the month of August
-
+print(orders[orders.month == 8])
 #Select how many orders are made by countries in the month of August
-
+ord2 = orders[orders.month == 8]
+print(ord2.groupby(ord2.Country).InvoiceNo.count())
 #What's the average amount of money spent by country
-
+print(orders.groupby(orders.Country).amount_spent.mean())
 #What's the most expensive item?
-
+print(orders[orders.UnitPrice == orders.UnitPrice.max()])
 #What was the average amount spent per year ?
-
+print(orders.groupby(orders.year).amount_spent.mean())
 
 
